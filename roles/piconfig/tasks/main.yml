@@ -1,0 +1,19 @@
+# this role is used to make the initial setup of the Raspberry, setting up the SSH key and disabling the GUI
+---
+- name: Update apt
+  apt: update_cache=yes
+
+- name: Install System Packages
+  apt: pkg={{ item }} state=latest
+  with_items: "{{ sys_packages }}"
+
+- name: Set authorized key took from file
+  authorized_key:
+    user: pi
+    state: present
+    key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
+
+- name: Disable GUI
+  command: "/usr/sbin/update-rc.d lightdm disable"
+  notify:
+    - stop lightdm

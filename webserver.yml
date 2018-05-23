@@ -1,0 +1,9 @@
+---
+- hosts: webservers
+  become: true
+  vars:
+    doc_root: /var/www
+    server_name: "{{ ansible_wlan0.ipv4.address }}"
+    dev_packages: [ 'curl','php7.0-curl', 'php7.0-cli' ]
+  roles:
+    - nginxphp
